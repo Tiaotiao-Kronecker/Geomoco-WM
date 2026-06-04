@@ -1,0 +1,42 @@
+project: geomoco_wm
+experiment: geomoco_cvae_minimal_libero
+
+dataset:
+  name: libero
+  suite: libero_spatial
+  demos_per_task: 50
+  views:
+    - agentview
+    - wrist
+  motion_horizon: 16
+  action_horizon: 8
+
+model:
+  context_dim: 1024
+  motion_dim: 96
+  latent_dim: 128
+  hidden_dims:
+    - 512
+    - 512
+
+training:
+  batch_size: 128
+  epochs: 100
+  lr: 0.0003
+  beta_kl: 0.001
+  composition_loss_weight: 1.0
+
+baselines:
+  - bc
+  - geomoco_ae
+  - geomoco_cvae
+  - zipmo_same_decoder
+  - amplify_same_decoder
+  - oracle_future_motion
+
+evaluation:
+  closed_loop_rollouts: 50
+  seeds:
+    - 0
+    - 1
+    - 2
