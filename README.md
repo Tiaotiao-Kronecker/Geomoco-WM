@@ -2,35 +2,38 @@
 
 Geometry-aware world-motion modeling for manipulation.
 
-This repository starts the clean GeoMoCo world-model line discussed in the
-planning notes: a structured conditional motion prior, paired with a lightweight
-action decoder, for closed-loop manipulation evaluation.
+This repository starts the clean GeoMoCo world-motion line discussed in the
+planning notes: a visually grounded conditional geometric motion prior, paired
+with a controlled action decoder, for manipulation world-model interfaces.
 
 ## Research Thesis
 
-GeoMoCo should be evaluated as a stochastic world-motion state, not only as an
-offline SE(3) motion embedding. The core claim is:
+GeoMoCo should be evaluated as a visually grounded stochastic future-motion
+prior, not only as an offline SE(3) motion embedding. The core claim is:
 
-> A geometry-aware conditional motion VAE can serve as a compact stochastic
-> world-motion prior. When paired with a lightweight inverse-dynamics action
-> decoder, it improves manipulation success and sample efficiency over direct
-> behavior cloning, deterministic motion embeddings, and visual motion-token
-> baselines.
+> A DINO-grounded GeoMoCo-cVAE can convert visual context, proprioception, task,
+> and motion history into a compact distribution over future geometric motion
+> states. This distribution should improve future state/progress prediction and
+> serve as an executable motion target for controlled action decoders.
 
 ## Initial Scope
 
-- GeoMoCo-AE baseline: deterministic geometric motion embedding.
-- GeoMoCo-cVAE: conditional distribution over geometric motion latents.
-- Motion chunk decoder: latent to future SE(3) motion chunk.
-- Lightweight action decoder: observation, proprioception, task, and motion
-  latent or decoded motion chunk to action horizon.
-- Controlled representation comparisons against ZipMo and AMPLIFY adapters
-  using the same action decoder.
-- Small closed-loop LIBERO rollout path before scaling.
+- DINO visual grounding front-end: frozen visual features plus
+  EEF/proprio/task-conditioned temporal pooling.
+- GeoMoCo-AE baseline: deterministic grounded geometric motion embedding.
+- GeoMoCo-cVAE: conditional distribution over future geometric motion latents
+  or future `B` / `AB` motion proposals.
+- Motion decoder: latent to future EEF SE(3), geometric progress, and optional
+  visual feature targets.
+- Controlled action decoder: MLP/transformer chunk head first, with
+  Diffusion-Policy or MeanFlow-style heads as stronger fixed decoders later.
+- ZipMotion and AMPLIFY remain follow-up or optional baselines, not first-pass
+  main-method dependencies.
+- Small closed-loop LIBERO rollout path after predictive and offline gates pass.
 
-This project intentionally avoids becoming a new large VLA policy. The policy
-component exists to verify whether the world-motion latent is executable and
-useful for control.
+This project intentionally avoids becoming a new large VLA policy. The action
+component exists to verify whether the visual-grounded world-motion prior is
+executable and useful for control.
 
 ## Repository Layout
 
@@ -55,13 +58,17 @@ docs/ideas_plans/plans/
 
 ## First Milestones
 
-1. Export LIBERO demonstration trajectories into `MotionChunkDataset`.
-2. Train GeoMoCo-AE and GeoMoCo-cVAE on future SE(3) motion chunks.
-3. Train one shared lightweight action decoder for all motion representations.
-4. Run controlled baselines: BC, GeoMoCo-AE, GeoMoCo-cVAE, ZipMo, AMPLIFY,
-   oracle future motion.
-5. Add closed-loop LIBERO evaluation and ablations for stochastic sampling,
-   composition loss, and action horizon.
+1. Export LIBERO demonstrations with RGB history, proprioception, EEF pose,
+   gripper, task, action chunks, and optional object-state teacher fields.
+2. Cache frozen DINO visual tokens and train the first visual grounding module.
+3. Train GeoMoCo-AE and GeoMoCo-cVAE on future geometric motion proposals.
+4. Run predictive gates: future state/progress/contact/visual-feature probes
+   against state-only, DINO-only, random-latent, shuffled-latent, AE, and cVAE
+   baselines.
+5. Train one shared action decoder for all motion representations before trying
+   stronger Diffusion-Policy or MeanFlow-style action heads.
+6. Add closed-loop LIBERO evaluation only after predictive and offline action
+   gates show non-degenerate value.
 
 ## Development
 

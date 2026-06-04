@@ -1,0 +1,82 @@
+project: geomoco_wm
+experiment: visual_grounded_geomoco_cvae_libero
+
+dataset:
+  name: libero
+  suite: libero_goal
+  demos_per_task: 50
+  views:
+    - agentview
+    - wrist
+  rgb_history: 4
+  motion_horizon: 16
+  action_horizon: 8
+  include_object_state_teacher: true
+  object_state_at_inference: false
+
+vision:
+  backbone: dino
+  freeze_backbone: true
+  cache_features: true
+  patch_pooling: eef_task_conditioned_attention
+  temporal_module: transformer
+  future_feature_target: true
+
+model:
+  context_dim: 1024
+  visual_dim: 768
+  proprio_dim: 32
+  task_dim: 128
+  motion_dim: 96
+  latent_dim: 128
+  hidden_dims:
+    - 512
+    - 512
+
+targets:
+  predict_future_eef_se3: true
+  predict_geometric_progress: true
+  predict_future_visual_feature: true
+  predict_object_state_teacher: false
+
+training:
+  batch_size: 128
+  epochs: 100
+  lr: 0.0003
+  beta_kl: 0.001
+  composition_loss_weight: 1.0
+  future_visual_loss_weight: 0.1
+  progress_loss_weight: 1.0
+
+action_decoder:
+  first_pass: action_chunk_transformer
+  horizon: 8
+  stronger_decoders:
+    - diffusion_policy
+    - meanflow_style
+
+baselines:
+  - dino_proprio_task_direct
+  - dino_proprio_task_geomoco_ae
+  - dino_proprio_task_geomoco_cvae
+  - dino_proprio_task_geomoco_cvae_no_comp
+  - dino_proprio_task_geomoco_cvae_no_sampling
+  - dino_proprio_task_direct_residual_future_latent
+  - dino_proprio_task_random_latent
+  - dino_proprio_task_shuffled_latent
+  - dino_proprio_task_oracle_future_motion
+
+deferred:
+  - zipmotion_visual_motion_frontend
+  - amplify_actionless_motion_prior
+
+evaluation:
+  predictive_horizons:
+    - 4
+    - 8
+    - 16
+  closed_loop_rollouts: 50
+  seeds:
+    - 0
+    - 1
+    - 2

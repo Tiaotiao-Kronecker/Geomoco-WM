@@ -4,14 +4,15 @@
 - Repository: `/home/user/projects/Geomoco-WM`
 
 ## Current Objective
-- Build `Geomoco-WM` as a clean project for the GeoMoCo world-motion line:
-  structured GeoMoCo-AE / GeoMoCo-cVAE motion priors, a lightweight action
-  decoder, and controlled ZipMo / AMPLIFY representation comparisons.
+- Build `Geomoco-WM` as a visual-grounded GeoMoCo world-motion project:
+  DINO visual grounding, GeoMoCo-AE / GeoMoCo-cVAE future-motion priors, and a
+  controlled action decoder for predictive and closed-loop validation.
 
 ## Current Execution Slice
-- Initial repository scaffolding and traceability setup.
-- Keep the first implementation small: data interfaces, model skeletons,
-  baseline adapter boundaries, minimal LIBERO config, and experiment plan.
+- Plan refinement and archive after deciding that the first serious route should
+  use visual grounding rather than a state-only VAE version of old GeoMoCo.
+- Keep ZipMotion and AMPLIFY as deferred modules or optional baselines, while
+  using DINO as the first lightweight visual grounding front-end.
 
 ## Latest Results
 - Local project created at `/home/user/projects/Geomoco-WM`.
@@ -32,24 +33,47 @@
   - PyTorch smoke test for `GeoMoCoCVAE` and `ActionDecoder`
 - `pytest` was not run because the active environment does not have `pytest`
   installed.
+- 2026-06-04 route refinement:
+  - old GeoMoCo evidence suggests EEF-centric latent is a phase/composition
+    factor, not a full policy or world state;
+  - a state-only cVAE would risk becoming only a multimodal version of old
+    GeoMoCo;
+  - current plan moves to DINO visual grounding plus GeoMoCo-cVAE future-motion
+    prior;
+  - Diffusion Policy / MeanFlow-style action heads are allowed as stronger
+    shared decoders, but AMPLIFY is not required for the first version;
+  - ZipMotion is deferred because DINO is a lighter first grounding front-end,
+    while ZipMotion remains a stronger visual-motion extension/baseline.
+- Added plan artifacts:
+  - `docs/ideas_plans/plans/visual-grounded-geomoco-wm-plan.md`
+  - `experiments/geomoco_cvae/configs/visual_grounded_libero.yaml`
 
 ## Current Interpretation
-- The repository is ready as a clean method track and handoff point.
+- The repository is ready as a clean visual-grounded method track and handoff
+  point.
 - The current code proves only package structure and minimal tensor plumbing.
-  It does not yet prove dataset export, training stability, reconstruction
-  quality, closed-loop performance, or baseline fairness.
+  It does not yet prove visual feature export, grounding quality, cVAE training
+  stability, predictive value, closed-loop performance, or baseline fairness.
+- The project should not claim full world-model status until it predicts or
+  samples future motion from visual/proprio/task context and shows value in
+  predictive or controlled action-decoder gates.
 
 ## Open Decisions Or Blockers
-- Decide the first LIBERO suite and demo budget for the minimal closed loop.
-- Define the exact `MotionChunkDataset` export contract from demonstrations.
-- Choose context encoder inputs: image views, proprioception, task text, and
-  history length.
-- Decide whether ZipMo / AMPLIFY are compared through official checkpoints,
-  same-decoder controlled baselines, or both in the first pass.
+- Decide the first LIBERO suite and demo budget for visual-grounded gates.
+- Define the exact visual-grounded dataset contract, including RGB history,
+  DINO feature cache, proprioception, EEF pose, gripper, task, future motion,
+  action chunk, and optional object-state teacher fields.
+- Choose DINO backbone/version and feature-cache format.
+- Decide the first action decoder: simple action-chunk transformer first, with
+  Diffusion Policy / MeanFlow-style decoder only after attribution is clear.
+- Decide whether object state is teacher/diagnostic only or included in any
+  upper-bound baseline.
 - Install project dev dependencies if `pytest` should be part of local checks.
 
 ## Next Session Entry Point
-1. Implement the LIBERO demonstration exporter into `MotionChunkDataset`.
-2. Add the first training script for GeoMoCo-AE and GeoMoCo-cVAE reconstruction.
-3. Add shared action-decoder training with BC, oracle motion, AE, and cVAE
-   inputs under the same horizon and capacity.
+1. Implement the visual-grounded LIBERO exporter and DINO feature-cache path.
+2. Add Gate-1 visual grounding probes for future EEF SE(3), geometric progress,
+   and optional future DINO feature prediction.
+3. Extend GeoMoCo-cVAE context with visual grounding token `g_t` and add
+   deterministic AE, stochastic cVAE, direct residual, random, shuffled, and
+   oracle future-motion baselines.
