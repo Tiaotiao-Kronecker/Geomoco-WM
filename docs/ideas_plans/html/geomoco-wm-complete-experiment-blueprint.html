@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GeoMoCo-WM Complete Experiment Blueprint</title>
+  <style>
+    :root {
+      --ink: #1c2421;
+      --muted: #5f6964;
+      --paper: #fbfaf6;
+      --band: #eef3ef;
+      --line: #ccd7cf;
+      --green: #2d6a4f;
+      --blue: #315f9f;
+      --amber: #b96326;
+      --red: #9d3d35;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 44px 24px 36px;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.18;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      margin-top: 14px;
+      color: #e5efe8;
+      font-size: 18px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .pill {
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 999px;
+      padding: 6px 11px;
+      color: #f7fff9;
+      font-size: 13px;
+    }
+
+    main {
+      padding: 28px 24px 64px;
+    }
+
+    section {
+      margin: 28px auto;
+      max-width: 1180px;
+    }
+
+    .band {
+      background: var(--band);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 28px 24px;
+      max-width: none;
+    }
+
+    .band .wrap {
+      max-width: 1180px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .item {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .item h3 {
+      color: var(--green);
+    }
+
+    .item.blue h3 {
+      color: var(--blue);
+    }
+
+    .item.amber h3 {
+      color: var(--amber);
+    }
+
+    .item.red h3 {
+      color: var(--red);
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul, ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li + li {
+      margin-top: 5px;
+    }
+
+    code, pre {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    pre {
+      overflow-x: auto;
+      background: #17201c;
+      color: #e8f4ed;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 14px 0 0;
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #edf2f6;
+      color: #243240;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(140px, 1fr));
+      gap: 10px;
+      align-items: stretch;
+      margin-top: 16px;
+    }
+
+    .flow .node {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--green);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 110px;
+    }
+
+    .flow .node:nth-child(2) {
+      border-top-color: var(--blue);
+    }
+
+    .flow .node:nth-child(3) {
+      border-top-color: var(--amber);
+    }
+
+    .flow .node:nth-child(4) {
+      border-top-color: #6e4aa8;
+    }
+
+    .flow .node:nth-child(5) {
+      border-top-color: var(--red);
+    }
+
+    .tag {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef0e7;
+      color: #3d473f;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .callout {
+      border-left: 4px solid var(--amber);
+      background: #fff6ec;
+      padding: 15px 16px;
+      border-radius: 6px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .grid.two,
+      .grid.three,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding-top: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>GeoMoCo-WM Complete Experiment Blueprint</h1>
+      <p class="subtitle">A staged plan for visual-grounded future-motion modeling: DINO context, GeoMoCo-cVAE priors, oracle gates, shared action decoders, and long-horizon LIBERO validation.</p>
+      <div class="meta">
+        <span class="pill">Date: 2026-06-05</span>
+        <span class="pill">Project: Geomoco-WM</span>
+        <span class="pill">Status: planning archive</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Core Decision</h2>
+      <div class="callout">
+        <p><strong>GeoMoCo-WM should not be a VAE-only version of old GeoMoCo.</strong> It should be a visual-grounded future-motion prior whose value is proven by predictive, oracle, action-decoder, and long-horizon gates.</p>
+      </div>
+      <div class="flow">
+        <div class="node">
+          <h3>1. Visual Context</h3>
+          <p>DINO patch tokens from RGB history, agentview, and wrist when available.</p>
+        </div>
+        <div class="node">
+          <h3>2. Grounding</h3>
+          <p>EEF/proprio/task-conditioned temporal pooling into a visual grounding token.</p>
+        </div>
+        <div class="node">
+          <h3>3. Motion Prior</h3>
+          <p>GeoMoCo-AE and GeoMoCo-cVAE predict future geometric motion and phase.</p>
+        </div>
+        <div class="node">
+          <h3>4. Action Bridge</h3>
+          <p>Shared action decoder tests whether future motion is executable.</p>
+        </div>
+        <div class="node">
+          <h3>5. Validation</h3>
+          <p>Mechanism tasks first, LIBERO-Long / LIBERO-10 only after gates pass.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <h2>Lessons From Previous GeoMoCo</h2>
+        <div class="grid two">
+          <div class="item red">
+            <h3>What The Old DINO Line Warned Us About</h3>
+            <ul>
+              <li>DINO can be a strong baseline by itself.</li>
+              <li>Raw DINO-distance plus latent-distance fusion is brittle.</li>
+              <li>Low state-regression error does not preserve executable-neighbor order.</li>
+              <li>Phase-correct neighbors can still be action-infeasible.</li>
+              <li>Task7 often saturates, while task5 exposes phase/action failure.</li>
+            </ul>
+          </div>
+          <div class="item blue">
+            <h3>Design Implication</h3>
+            <p>Use DINO as a context source, not as the whole method. Train visual grounding to predict future motion, progress, and executable targets instead of using it only as nearest-neighbor distance.</p>
+            <pre>DINO tokens -> g_t
+g_t + robot history -> p(z_future)
+z_future -> future geometry/progress/action</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Dataset Design</h2>
+      <div class="grid three">
+        <div class="item">
+          <h3>Raw Episode Fields</h3>
+          <ul>
+            <li>RGB: agentview and wrist</li>
+            <li>Proprioception, EEF pose, gripper</li>
+            <li>Task id or language</li>
+            <li>Action command</li>
+            <li>Optional object-state teacher</li>
+            <li>Success and replay metadata</li>
+          </ul>
+        </div>
+        <div class="item amber">
+          <h3>Window Targets</h3>
+          <ul>
+            <li>Future EEF SE(3)</li>
+            <li>Per-step EEF deltas</li>
+            <li>Geometric progress / phase</li>
+            <li>Future DINO feature</li>
+            <li>Action chunk</li>
+            <li>Optional contact/object teacher</li>
+          </ul>
+        </div>
+        <div class="item blue">
+          <h3>Splits</h3>
+          <ul>
+            <li>Train for fitting</li>
+            <li>Search/dev for gate selection</li>
+            <li>Held-out validation for one-shot confirmation</li>
+            <li>No alpha or model tuning on validation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Network Architecture</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Input</th>
+            <th>Output</th>
+            <th>Required Controls</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DINO feature cache</td>
+            <td>RGB history</td>
+            <td>Patch tokens and global token</td>
+            <td>Shuffled temporal order, random visual tokens</td>
+          </tr>
+          <tr>
+            <td>Visual grounding</td>
+            <td>DINO tokens, EEF, gripper, proprio, task</td>
+            <td>Grounding token <code>g_t</code></td>
+            <td>Global-token-only, no-temporal-module</td>
+          </tr>
+          <tr>
+            <td>Structured context</td>
+            <td>EEF history, gripper, action history, task</td>
+            <td>Robot context <code>r_t</code></td>
+            <td>Proprio/history-only baseline</td>
+          </tr>
+          <tr>
+            <td>GeoMoCo-cVAE</td>
+            <td><code>g_t</code>, <code>r_t</code>, future motion during training</td>
+            <td>Distribution over future motion</td>
+            <td>AE, no-comp, no-sampling, random/shuffled latent</td>
+          </tr>
+          <tr>
+            <td>Action decoder</td>
+            <td>Context plus future motion target</td>
+            <td>Action chunk</td>
+            <td>Direct BC, oracle future motion, direct residual future</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <h2>Experiment Sequence</h2>
+        <div class="grid two">
+          <div class="item">
+            <h3>Gate -1: Task Mining</h3>
+            <p>Choose tasks with headroom, oracle replay success, phase structure, and non-saturated direct baselines.</p>
+            <span class="tag">task0 drawer</span><span class="tag">task5 plate</span><span class="tag">task7 stove</span><span class="tag">LIBERO-Long</span>
+          </div>
+          <div class="item">
+            <h3>Gate 0: Data And Features</h3>
+            <p>Export windows, cache DINO features, and audit alignment before any model training.</p>
+          </div>
+          <div class="item">
+            <h3>Gate 1: Visual Grounding</h3>
+            <p>Test whether DINO-conditioned context predicts future EEF SE(3), progress, and future visual features.</p>
+          </div>
+          <div class="item amber">
+            <h3>Gate 2: Oracle Motion</h3>
+            <p>If ground-truth future motion does not improve a controlled action decoder over direct BC, stop the action route.</p>
+          </div>
+          <div class="item">
+            <h3>Gate 3: Future Prior</h3>
+            <p>Compare AE, cVAE samples, direct residual, random, shuffled, and oracle motion on coverage and phase precision.</p>
+          </div>
+          <div class="item">
+            <h3>Gate 4: Shared Decoder</h3>
+            <p>Check whether learned future motion closes part of the oracle action gap under the same decoder capacity.</p>
+          </div>
+          <div class="item">
+            <h3>Gate 5: Mechanism Closed Loop</h3>
+            <p>Run task0/task5/task7 search splits, with fixed/regressed case audits and action trace diagnostics.</p>
+          </div>
+          <div class="item blue">
+            <h3>Gate 6: Long-Horizon Main Result</h3>
+            <p>Promote to LIBERO-Long / LIBERO-10 only after Gates 1-5 pass cleanly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Baseline And Metric Matrix</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Baselines</th>
+            <th>Metrics</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Visual grounding</td>
+            <td>proprio-only, DINO global, DINO temporal, shuffled DINO</td>
+            <td>future SE(3), progress RMSE, future visual feature error</td>
+          </tr>
+          <tr>
+            <td>Motion prior</td>
+            <td>AE, cVAE, direct residual, random, shuffled, oracle</td>
+            <td>min-of-K coverage, calibration, composition closure</td>
+          </tr>
+          <tr>
+            <td>Action decoder</td>
+            <td>direct BC, oracle future motion, AE, cVAE, residual</td>
+            <td>action RMSE/L1, oracle gap closure, chunk consistency</td>
+          </tr>
+          <tr>
+            <td>Closed loop</td>
+            <td>DINO direct, GeoMoCo-AE, GeoMoCo-cVAE, residual future</td>
+            <td>success, fixed/regressed cases, phase trajectory, action deltas</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Promotion And Stop Rules</h2>
+      <div class="grid two">
+        <div class="item">
+          <h3>Promote When</h3>
+          <ul>
+            <li>Visual grounding beats proprio/history on future prediction.</li>
+            <li>Oracle future motion beats direct BC under controlled capacity.</li>
+            <li>cVAE improves coverage beyond AE and direct residual baselines.</li>
+            <li>Learned future motion closes part of the oracle action gap.</li>
+            <li>Long-horizon tasks show stronger gains than short tasks.</li>
+          </ul>
+        </div>
+        <div class="item red">
+          <h3>Stop Or Redesign When</h3>
+          <ul>
+            <li>Direct DINO/proprio policy saturates all selected tasks.</li>
+            <li>Oracle future motion does not help actions.</li>
+            <li>Random/shuffled latent matches GeoMoCo.</li>
+            <li>Direct residual future dominates cVAE everywhere.</li>
+            <li>Search-split gains disappear on held-out validation.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Immediate Implementation Checklist</h2>
+      <ol>
+        <li>Implement visual-grounded dataset exporter.</li>
+        <li>Implement DINO feature cache with alignment audits.</li>
+        <li>Add task mining and headroom scripts.</li>
+        <li>Add visual grounding probe model.</li>
+        <li>Add oracle future-motion action-decoder baseline.</li>
+        <li>Extend GeoMoCo-cVAE context with <code>g_t</code>.</li>
+        <li>Add direct residual future-latent baseline.</li>
+        <li>Add shared action decoder and gate reports.</li>
+        <li>Add mechanism closed-loop scripts.</li>
+        <li>Promote to LIBERO-Long / LIBERO-10 only after gates pass.</li>
+      </ol>
+      <p class="small">Markdown source: <code>docs/ideas_plans/plans/geomoco-wm-complete-experiment-blueprint.md</code></p>
+    </section>
+  </main>
+</body>
+</html>

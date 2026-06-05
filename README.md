@@ -54,6 +54,22 @@ experiments/geomoco_cvae/configs/
 
 docs/ideas_plans/plans/
   geomoco-cvae-experiment-plan.md
+  visual-grounded-geomoco-wm-plan.md
+  geomoco-wm-complete-experiment-blueprint.md
+
+docs/ideas_plans/html/
+  geomoco-wm-complete-experiment-blueprint.html
+```
+
+## Current Blueprint
+
+The current archived design is
+`docs/ideas_plans/plans/geomoco-wm-complete-experiment-blueprint.md`.
+
+For a browser-readable version, open:
+
+```text
+docs/ideas_plans/html/geomoco-wm-complete-experiment-blueprint.html
 ```
 
 ## First Milestones

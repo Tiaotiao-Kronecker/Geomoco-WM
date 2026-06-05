@@ -1,6 +1,6 @@
 # Active Worklog
 
-- Last updated: 2026-06-05
+- Last updated: 2026-06-04
 - Repository: `/home/user/projects/Geomoco-WM`
 
 ## Current Objective
@@ -52,12 +52,6 @@
   - core decision: do not promote GeoMoCo-cVAE or the action-decoder route until
     predictive gates, future-motion coverage gates, and the oracle
     future-motion action-decoder gate show non-degenerate value.
-- 2026-06-05 complete experiment blueprint archived:
-  - `docs/ideas_plans/plans/geomoco-wm-complete-experiment-blueprint.md`
-  - `docs/ideas_plans/html/geomoco-wm-complete-experiment-blueprint.html`
-  - content covers experiment order, network architecture, dataset/window
-    contract, DINO failure lessons, LIBERO-Long/LIBERO-10 promotion criteria,
-    baseline matrix, metrics, and stop rules.
 
 ## Current Interpretation
 - The repository is ready as a clean visual-grounded method track and handoff
@@ -72,10 +66,6 @@
   candidate retrieval may improve representation recall without producing
   closed-loop gains if progress precision, phase estimation, or action execution
   is still the real bottleneck.
-- The new blueprint turns that warning into explicit gates: task mining,
-  visual-grounding probes, oracle future-motion action decoding, cVAE coverage,
-  shared decoder attribution, mechanism closed-loop, and only then
-  LIBERO-Long/LIBERO-10 main evaluation.
 
 ## Open Decisions Or Blockers
 - Decide the first LIBERO suite and demo budget for visual-grounded gates.
@@ -88,9 +78,6 @@
 - Add the oracle future-motion diagnostic early: if the GT-future-motion
   action decoder does not clearly beat direct BC, do not spend more effort on
   the cVAE-to-action route before redesigning the interface or task suite.
-- Decide the concrete LIBERO-Long/LIBERO-10 task subset after a headroom audit:
-  avoid tasks where direct DINO/BC is saturated, and avoid tasks where all
-  policies fail for unrelated execution reasons.
 - Decide whether object state is teacher/diagnostic only or included in any
   upper-bound baseline.
 - Install project dev dependencies if `pytest` should be part of local checks.
@@ -104,5 +91,3 @@
    oracle future-motion baselines.
 4. Before large cVAE training, compare direct BC with a controlled
    `GT future motion -> action decoder` upper bound.
-5. Build the task-mining/headroom audit so mechanism tasks and LIBERO-Long /
-   LIBERO-10 tasks are selected before large model training.
