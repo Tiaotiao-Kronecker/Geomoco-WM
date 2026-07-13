@@ -9,6 +9,7 @@ description = "Geometry-aware world-motion modeling for manipulation."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+  "h5py>=3.8",
   "numpy>=1.24",
   "pyyaml>=6.0",
   "scipy>=1.10",
